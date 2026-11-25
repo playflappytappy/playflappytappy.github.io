@@ -103,8 +103,22 @@
     if (q.get("dbg")) document.getElementById("sub").textContent = ua;
     // On Android a tapped market link opens the Play Store app itself, even inside Messenger and Facebook, where a
     // plain Google Play web address can open inside the in-app browser instead.
-    if (isAndroid) a.href = "intent://details?id=com.flappytappy&referrer=" + encodeURIComponent(ref) +
-      "#Intent;scheme=market;package=com.android.vending;S.browser_fallback_url=" + encodeURIComponent(play) + ";end";
+    if (isAndroid) {
+      var store = "intent://details?id=com.flappytappy&referrer=" + encodeURIComponent(ref) +
+        "#Intent;scheme=market;package=com.android.vending;S.browser_fallback_url=" + encodeURIComponent(play) + ";end";
+      a.href = store;
+      // Messenger's built-in browser blocks the automatic jump but allows one after a tap, so a tap anywhere on the
+      // page opens the Play Store app.
+      if (id) {
+        a.textContent = "Tap to install";
+        document.getElementById("sub").textContent = "Your friend dares you to beat their score. Tap anywhere to get the game.";
+        document.addEventListener("click", function (e) {
+          if (e.target.closest && e.target.closest("#iphone, .small a")) return;
+          e.preventDefault(); location.href = store;
+        }, true);
+        document.body.style.cursor = "pointer";
+      }
+    }
   })();
 </script>
 </body>
