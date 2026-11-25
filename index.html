@@ -74,7 +74,8 @@
     var play = "https://play.google.com/store/apps/details?id=com.flappytappy&referrer=" + encodeURIComponent(ref);
     var a = document.getElementById("android");
     a.href = play;
-    if (!isAndroid) return;
+    // A dare on a phone that is not Android (for example an iPhone): go straight to Google Play too, no extra tap.
+    if (!isAndroid) { if (id) setTimeout(function () { location.href = play; }, 50); return; }
     document.getElementById("iphone").hidden = true;
     if (!id) return;
     a.textContent = "Accept the dare";
