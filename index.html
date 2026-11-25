@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>I dare you: beat my score · Flappy Tappy</title>
+<meta name="description" content="Free one-tap duels in 30 seconds. Beat your friend's score in Flappy Tappy.">
+<!-- The link preview Messenger, WhatsApp, Viber and texting apps show for a dare link. -->
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Flappy Tappy">
+<meta property="og:title" content="I dare you: beat my score in Flappy Tappy!">
+<meta property="og:description" content="Free one-tap duels. 30 seconds. Tap to play.">
+<meta property="og:url" content="https://playflappytappy.github.io/">
+<meta property="og:image" content="https://playflappytappy.github.io/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Flappy Tappy: I dare you, beat my score">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://playflappytappy.github.io/og.png">
+<meta name="theme-color" content="#5a32d6">
+<link rel="icon" href="icon.png">
+<link rel="apple-touch-icon" href="icon.png">
+<style>
+  :root { --violet:#5a32d6; --magenta:#ff2d8a; --ink:#1f1b3a; --muted:#6b6690; }
+  * { box-sizing:border-box; }
+  body { margin:0; min-height:100vh; font-family: ui-rounded, "SF Pro Rounded", "Nunito", system-ui, sans-serif; color:var(--ink);
+         background: radial-gradient(120% 80% at 50% 0%, #7b4dff 0%, #5a32d6 45%, #3a1e9c 100%);
+         display:flex; align-items:center; justify-content:center; padding:20px 14px; }
+  .card { width:100%; max-width:420px; background:#fff; border-radius:30px; overflow:hidden; text-align:center;
+          box-shadow:0 18px 40px rgba(20,8,70,.35); }
+  .hero { display:block; width:100%; height:auto; }
+  .body { padding:20px 22px 24px; }
+  h1 { font-size:30px; line-height:1.1; margin:4px 0 6px; font-weight:900; letter-spacing:-.5px; }
+  .sub { color:var(--muted); font-size:17px; margin:0 0 18px; font-weight:700; }
+  .btn { display:flex; align-items:center; justify-content:center; gap:10px; width:100%; padding:18px; border-radius:18px;
+         font-size:20px; font-weight:900; text-decoration:none; margin-top:12px; }
+  .play { background:var(--magenta); color:#fff; box-shadow:0 6px 0 #c41466; }
+  .alt { background:#fff; color:var(--violet); border:2px solid var(--violet); font-size:17px; padding:14px; }
+  .small { color:var(--muted); font-size:13px; margin-top:16px; line-height:1.4; }
+  .small a { color:var(--muted); }
+  [hidden] { display:none !important; }
+</style>
+</head>
+<body>
+<main class="card">
+  <img class="hero" src="og.png" alt="Flappy Tappy: two balls face off through a golden ring" width="1200" height="630">
+  <div class="body">
+    <h1 id="title">Flappy Tappy</h1>
+    <p class="sub" id="sub">One-tap duels. 30 seconds. Last one flying wins.</p>
+    <a class="btn play" id="android" href="https://play.google.com/store/apps/details?id=com.flappytappy&amp;referrer=utm_source%3Dsite">Get it on Google Play</a>
+    <a class="btn alt" id="iphone" href="https://apps.apple.com/app/apple-store/id1203310957?pt=118564186&amp;ct=dare-site&amp;mt=8">Get it on the App Store</a>
+    <p class="small">Free · No ads · <a href="https://chiragmirani.github.io/ft/privacy.html">Privacy</a></p>
+  </div>
+</main>
+<script>
+  // A dare link: playflappytappy.github.io/?d=<challenge id>&v=<sender's version>.
+  // Android: the game opens straight into the duel when it is installed; otherwise Google Play opens with the challenge
+  // in the install referrer, so the duel starts on the game's first launch. iPhone: the App Store.
+  (function () {
+    var q = new URLSearchParams(location.search);
+    var id = /^[A-Za-z0-9]{6,12}$/.test(q.get("d") || "") ? q.get("d") : "";
+    var v = /^[0-9]{1,4}$/.test(q.get("v") || "") ? q.get("v") : "";
+    var ua = navigator.userAgent;
+    var isAndroid = /Android/i.test(ua);
+    var isApple = /iPhone|iPad|iPod/i.test(ua);
+    if (id) {
+      document.title = "You've been dared! · Flappy Tappy";
+      document.getElementById("title").textContent = "You've been dared!";
+      document.getElementById("sub").textContent = "Your friend dares you to beat their score. 30 seconds, one tap.";
+    }
+    if (isApple) { document.getElementById("android").hidden = true; return; }
+    if (!isAndroid) return;
+    document.getElementById("iphone").hidden = true;
+    var ref = id ? "cx=" + id + "&utm_source=dare" + (v ? "&utm_campaign=v" + v : "") : "utm_source=site";
+    var play = "https://play.google.com/store/apps/details?id=com.flappytappy&referrer=" + encodeURIComponent(ref);
+    var a = document.getElementById("android");
+    a.href = play;
+    if (!id) return;
+    a.textContent = "Accept the dare";
+    var app = "intent://challenge?x=" + id + "#Intent;scheme=flappytappy;package=com.flappytappy;S.browser_fallback_url="
+      + encodeURIComponent(play) + ";end";
+    // Inside Messenger, Facebook, Instagram and similar in-app browsers an "open the app" link fails silently, so go
+    // straight to Google Play. Elsewhere open the game at once (Google Play when it is not installed), and go to
+    // Google Play if the page is still showing 1.5 seconds later.
+    var inApp = /FBAN|FBAV|FB_IAB|FBIOS|Messenger|Instagram|Line\/|Twitter|TikTok|musical_ly|Snapchat|; wv\)/i.test(ua);
+    if (inApp) { setTimeout(function () { location.href = play; }, 50); return; }
+    a.href = app;
+    setTimeout(function () { location.href = app; }, 50);
+    setTimeout(function () { if (!document.hidden) location.href = play; }, 1500);
+  })();
+</script>
+</body>
+</html>
