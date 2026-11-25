@@ -16,6 +16,8 @@
 <meta property="og:image:type" content="image/jpeg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
 <meta property="og:image:alt" content="Flappy Tappy: I dare you, beat my score">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="https://playflappytappy.github.io/og.jpg">
@@ -97,6 +99,10 @@
     a.href = play;
     if (isAndroid) document.getElementById("iphone").hidden = true;
     if (id) a.textContent = "Accept the dare";
+    // On Android a tapped market link opens the Play Store app itself, even inside Messenger and Facebook, where a
+    // plain Google Play web address can open inside the in-app browser instead.
+    if (isAndroid) a.href = "intent://details?id=com.flappytappy&referrer=" + encodeURIComponent(ref) +
+      "#Intent;scheme=market;package=com.android.vending;S.browser_fallback_url=" + encodeURIComponent(play) + ";end";
   })();
 </script>
 </body>
