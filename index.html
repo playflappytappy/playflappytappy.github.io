@@ -42,6 +42,27 @@
   .small a { color:var(--muted); }
   [hidden] { display:none !important; }
 </style>
+<script>
+// A dare link (?d=<challenge id>&v=<version>) never stops on this page: it leaves for the Google Play install page
+// before anything is drawn. Inside Messenger, Facebook and other in-app browsers it opens the Play Store app directly
+// (market link), with the Google Play web address as the backup.
+(function () {
+  var q = new URLSearchParams(location.search), id = q.get("d") || "", v = q.get("v") || "";
+  if (!/^[A-Za-z0-9]{6,12}$/.test(id)) return;
+  if (!/^[0-9]{1,4}$/.test(v)) v = "";
+  var ref = encodeURIComponent("cx=" + id + "&utm_source=dare" + (v ? "&utm_campaign=v" + v : ""));
+  var web = "https://play.google.com/store/apps/details?id=com.flappytappy&referrer=" + ref;
+  var ua = navigator.userAgent;
+  var inApp = /FBAN|FBAV|FB_IAB|FBIOS|Messenger|Orca|Instagram|Line\/|Twitter|TikTok|musical_ly|Snapchat|; wv\)/i.test(ua);
+  if (/Android/i.test(ua) && inApp) {
+    location.href = "intent://details?id=com.flappytappy&referrer=" + ref +
+      "#Intent;scheme=market;package=com.android.vending;S.browser_fallback_url=" + encodeURIComponent(web) + ";end";
+    setTimeout(function () { if (!document.hidden) location.replace(web); }, 700);
+  } else {
+    location.replace(web);
+  }
+})();
+</script>
 </head>
 <body>
 <main class="card">
@@ -74,21 +95,8 @@
     var play = "https://play.google.com/store/apps/details?id=com.flappytappy&referrer=" + encodeURIComponent(ref);
     var a = document.getElementById("android");
     a.href = play;
-    // A dare on a phone that is not Android (for example an iPhone): go straight to Google Play too, no extra tap.
-    if (!isAndroid) { if (id) setTimeout(function () { location.href = play; }, 50); return; }
-    document.getElementById("iphone").hidden = true;
-    if (!id) return;
-    a.textContent = "Accept the dare";
-    var app = "intent://challenge?x=" + id + "#Intent;scheme=flappytappy;package=com.flappytappy;S.browser_fallback_url="
-      + encodeURIComponent(play) + ";end";
-    // Inside Messenger, Facebook, Instagram and similar in-app browsers an "open the app" link fails silently, so go
-    // straight to Google Play. Elsewhere open the game at once (Google Play when it is not installed), and go to
-    // Google Play if the page is still showing 1.5 seconds later.
-    var inApp = /FBAN|FBAV|FB_IAB|FBIOS|Messenger|Instagram|Line\/|Twitter|TikTok|musical_ly|Snapchat|; wv\)/i.test(ua);
-    if (inApp) { setTimeout(function () { location.href = play; }, 50); return; }
-    a.href = app;
-    setTimeout(function () { location.href = app; }, 50);
-    setTimeout(function () { if (!document.hidden) location.href = play; }, 1500);
+    if (isAndroid) document.getElementById("iphone").hidden = true;
+    if (id) a.textContent = "Accept the dare";
   })();
 </script>
 </body>
