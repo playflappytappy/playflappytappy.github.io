@@ -50,7 +50,7 @@
     <h1 id="title">Flappy Tappy</h1>
     <p class="sub" id="sub">One-tap duels. 30 seconds. Last one flying wins.</p>
     <a class="btn play" id="android" href="https://play.google.com/store/apps/details?id=com.flappytappy&amp;referrer=utm_source%3Dsite">Get it on Google Play</a>
-    <a class="btn alt" id="iphone" href="https://apps.apple.com/app/apple-store/id1203310957?pt=118564186&amp;ct=dare-site&amp;mt=8">Get it on the App Store</a>
+    <p class="small" id="iphone">On iPhone? <a href="https://apps.apple.com/app/apple-store/id1203310957?pt=118564186&amp;ct=dare-site&amp;mt=8">Get it on the App Store</a></p>
     <p class="small">Free · No ads · <a href="https://chiragmirani.github.io/ft/privacy.html">Privacy</a></p>
   </div>
 </main>
@@ -70,13 +70,12 @@
       document.getElementById("title").textContent = "You've been dared!";
       document.getElementById("sub").textContent = "Your friend dares you to beat their score. 30 seconds, one tap.";
     }
-    if (isApple) { document.getElementById("android").hidden = true; return; }
-    if (!isAndroid) return;
-    document.getElementById("iphone").hidden = true;
     var ref = id ? "cx=" + id + "&utm_source=dare" + (v ? "&utm_campaign=v" + v : "") : "utm_source=site";
     var play = "https://play.google.com/store/apps/details?id=com.flappytappy&referrer=" + encodeURIComponent(ref);
     var a = document.getElementById("android");
     a.href = play;
+    if (!isAndroid) return;
+    document.getElementById("iphone").hidden = true;
     if (!id) return;
     a.textContent = "Accept the dare";
     var app = "intent://challenge?x=" + id + "#Intent;scheme=flappytappy;package=com.flappytappy;S.browser_fallback_url="
