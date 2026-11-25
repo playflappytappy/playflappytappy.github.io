@@ -58,12 +58,12 @@
   var inApp = /FBAN|FBAV|FB_IAB|FBIOS|Messenger|Orca|Instagram|Line\/|Twitter|TikTok|musical_ly|Snapchat|; wv\)/i.test(ua);
   if (q.get("dbg")) return;
   if (!/Android/i.test(ua)) { location.replace(web); return; }
-  // Android: jump at once, no timer (timed jumps get blocked). Test variants: t=i intent link, t=w Google Play web page.
+  // Android: jump at once, no timer (timed jumps get blocked). Test variants: t=i intent link, t=m market link.
   var t = q.get("t");
-  if (t === "w") location.replace(web);
+  if (t === "m") location.href = "market://details?id=com.flappytappy&referrer=" + ref;
   else if (t === "i") location.href = "intent://details?id=com.flappytappy&referrer=" + ref +
     "#Intent;scheme=market;package=com.android.vending;S.browser_fallback_url=" + encodeURIComponent(web) + ";end";
-  else location.href = "market://details?id=com.flappytappy&referrer=" + ref;
+  else location.replace(web);  // tested on Wednesday, November 25: opens Google Play from a Messenger link
 })();
 </script>
 </head>
